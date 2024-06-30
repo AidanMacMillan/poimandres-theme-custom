@@ -1,4 +1,6 @@
-const base = {
+const Color = require('color')
+
+const baseOriginal = {
   colors: {
     brightYellow: '#fffac2',
     brightMint: '#5DE4c7',
@@ -30,6 +32,25 @@ const base = {
     fontStyle: 'italic',
   },
 }
+
+function getHueShiftedBase() {
+  const base = JSON.parse(JSON.stringify(baseOriginal))
+  Object.keys(base.colors).forEach((key) => {
+    base.colors[key] = hueShiftHex(base.colors[key])
+  })
+  return base
+}
+
+function hueShiftHex(hex) {
+  let color = new Color(hex)
+  color = color.rotate(0).saturate(-0.1).lighten(-0.1)
+  if (color.alpha() < 1) {
+    return color.hexa()
+  }
+  return color.hex()
+}
+
+const base = getHueShiftedBase()
 
 const noitalics = { ...base, styles: { ...base.styles, fontStyle: '' } }
 
